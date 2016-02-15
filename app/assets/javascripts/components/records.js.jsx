@@ -1,43 +1,63 @@
 
-
 var Records = React.createClass({
+  loadRecordsFromServer: function(){
+    $.ajax({
+      url: this.props.url,
+      dataType: 'json',
+      cache: false,
+      success: function(data) {
+        this.setState(data);
+      }.bind(this)
+    });
+  },
   getInitialState: function(){
-    return {records: this.props.data}
+    return { records: JSON.parse(this.props.records)};
   },
-  getDefaultProps: function(){
-    return {records: []}
+  // getDefaultProps: function(){
+  //   return {records: []}
+  // },
+  // addRecord: function(record){
+  //   var records = this.state.records.slice();
+  //   records.push(record);
+  //   this.setState({records: records});
+  // },
+  handleRecordSubmit: function(record) {
+    $.ajax({
+      data: record,
+      url: this.props.url,
+      type: "POST",
+      dataType: 'json',
+      success: function(data){
+        this.setState(data);
+      }.bind(this)
+    });
   },
-  addRecord: function(record){
-    var records = this.state.records.slice();
-    records.push(record);
-    this.setState({records: records});
+  componentDidMount: function(){
+    this.loadRecordsFromServer();
+    setInterval(this.loadRecordsFromServer, this.props.updateInterval);
   },
   render: function(){
-    var RecordNodes = this.props.data.map(function(record) {
-      return(
-        <Record date={record.date} title={record.title} amount={record.amount} key={record.id}>
-        </Record>
-      )
-    });
     return (
-      <div className="records">
+      <div className="record-box">
         <h2 className="title"> Records </h2>
-        <table className="table">
-          <thead>
-            <tr>
-              <th> Date </th>
-              <th> Title </th>
-              <th> Amount </th>
-            </tr>
-          </thead>
-          <tbody>
-            {RecordNodes}
-          </tbody>
-        </table>
-        <RecordForm handleNewRecord={this.addRecord} />
+        <RecordList records={ this.state.records } />
+        <RecordForm form={ this.state.form } onRecordSubmit={ this.handleRecordSubmit } />
       </div>
     );
   }
-})
+});
 
-
+var RecordList = React.createClass({
+  render: function(){
+    var RecordNodes = this.props.records.map(function(record) {
+      return(
+        <Record date={record.date} title={record.title} amount={record.amount} key={record.id}></Record>
+      )
+    });
+    return(
+      <div className="record-list">
+        { RecordNodes }
+      </div>
+    );
+  }
+});
