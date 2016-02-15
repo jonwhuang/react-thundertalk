@@ -16,11 +16,18 @@ var RecordForm = React.createClass({
   },
   handleSubmit: function(e){
     e.preventDefault();
-    var date = this.state.date.trim();
-    var title = this.state.title.trim();
-    var amount = this.state.amount.trim();
-    this.props.onRecordSubmit({date: date, title: title, amount: amount});
-    this.setState({author: '', text: ''})
+    $.ajax({
+      url: this.props.url,
+      dataType: 'json',
+      type: 'POST',
+      data: {record: this.state },
+      success: function(data){
+        console.log("I MADE IT HERE");
+        this.props.handleNewRecord(data);
+        this.setState({data: data});
+        this.getInitialState();
+      }.bind(this)
+    });
   },
   render: function(){
     return(

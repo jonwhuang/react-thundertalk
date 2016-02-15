@@ -7,25 +7,10 @@ var Records = React.createClass({
   getDefaultProps: function(){
     return {records: []}
   },
-  handleRecordSubmit: function(record){
-    // var records = this.state.data;
-    // record.id = Date.now();
-    // console.log(records);
-    // var newRecords = records.concat([record]);
-    // this.setState({data: newRecords});
-    $.ajax({
-      url: this.props.url,
-      dataType: 'json',
-      type: 'POST',
-      data: { record: record },
-      success: function(data){
-        this.setState({data: data});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        // this.setState({data: records});
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
+  addRecord: function(record){
+    var records = this.state.records.slice();
+    records.push(record);
+    this.setState({records: records});
   },
   render: function(){
     var RecordNodes = this.props.data.map(function(record) {
@@ -49,7 +34,7 @@ var Records = React.createClass({
             {RecordNodes}
           </tbody>
         </table>
-        <RecordForm onRecordSubmit={this.handleRecordSubmit} />
+        <RecordForm handleNewRecord={this.addRecord} />
       </div>
     );
   }
