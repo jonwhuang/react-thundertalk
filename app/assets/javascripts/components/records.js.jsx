@@ -1,17 +1,20 @@
 
 var Records = React.createClass({
-  loadRecordsFromServer: function(){
-    $.ajax({
-      url: this.props.url,
-      dataType: 'json',
-      cache: false,
-      success: function(data) {
-        this.setState(data);
-      }.bind(this)
-    });
-  },
+  // loadRecordsFromServer: function(){
+  //   $.ajax({
+  //     url: this.props.url,
+  //     dataType: 'json',
+  //     cache: false,
+  //     success: function(data) {
+  //       this.setState({records: data});
+  //     }.bind(this),
+  //     error: function(xhr, status, error) {
+  //       console.error(this.props.url, status, error.toString());
+  //     }.bind(this)
+  //   });
+  // },
   getInitialState: function(){
-    return { records: JSON.parse(this.props.records)};
+    return {records: JSON.parse(this.props.records)};
   },
   // getDefaultProps: function(){
   //   return {records: []}
@@ -22,20 +25,32 @@ var Records = React.createClass({
   //   this.setState({records: records});
   // },
   handleRecordSubmit: function(record) {
-    $.ajax({
-      data: {record: record},
-      url: this.props.url,
-      type: "POST",
-      dataType: 'json',
-      success: function(data){
-        this.setState(data);
-      }.bind(this)
-    });
+    var records = this.state.records.slice();
+    record.id = Date.now();
+    records.push(record);
+    this.setState({records: records}, function(){
+      $.ajax({
+        data: {record: record},
+        url: this.props.url,
+        type: "POST",
+        dataType: 'json',
+        success: function(data){
+          this.setState(data);
+        }.bind(this),
+        error: function(xhr, status, err) {
+          console.log(this.props.url, status, err.toString());
+        }.bind(this)
+      });
+    })
   },
-  componentDidMount: function(){
-    this.loadRecordsFromServer();
-    setInterval(this.loadRecordsFromServer, this.props.updateInterval);
-  },
+  // componentDidMount: function(){
+  //   this.loadRecordsFromServer();
+  //   this.loadInterval = setInterval(this.loadRecordsFromServer, this.props.updateInterval);
+  // },
+  // componentWillUnmount: function() {
+  //   this.loadInterval && clearInterval(this.loadInterval);
+  //   this.loadInterval = false;
+  // },
   render: function(){
     return (
       <div className="record-box">
