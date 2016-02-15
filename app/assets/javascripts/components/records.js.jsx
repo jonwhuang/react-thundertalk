@@ -23,7 +23,7 @@ var Records = React.createClass({
   // },
   handleRecordSubmit: function(record) {
     $.ajax({
-      data: record,
+      data: {record: record},
       url: this.props.url,
       type: "POST",
       dataType: 'json',
