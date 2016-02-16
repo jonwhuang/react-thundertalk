@@ -25,11 +25,17 @@ var RecordForm = React.createClass({
   },
   render: function(){
     return(
-      <form className="recordForm" onSubmit={this.handleSubmit} >
-        <input type="text" placeholder="Date" value= {this.state.date} onChange= {this.handleDateChange} />
-        <input type="text" placeholder="Title" value= {this.state.title} onChange= {this.handleTitleChange} />
-        <input type="number" placeholder="Amount" value= {this.state.amount} onChange= {this.handleAmountChange} />
-        <input type="submit" value="Create Record" />
+      <form className="recordForm form-inline" onSubmit={this.handleSubmit} >
+        <div className="form-group">
+          <input className="form-control" type="text" placeholder="Date" value= {this.state.date} onChange= {this.handleDateChange} />
+        </div>
+        <div className="form-group">
+          <input className="form-control" type="text" placeholder="Title" value= {this.state.title} onChange= {this.handleTitleChange} />
+        </div>
+        <div className="form-group">
+          <input className="form-control" type="number" placeholder="Amount" value= {this.state.amount} onChange= {this.handleAmountChange} />
+        </div>
+        <input className="btn btn-primary" type="submit" value="Create Record" />
       </form>
     );
   }

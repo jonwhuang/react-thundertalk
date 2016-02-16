@@ -71,7 +71,18 @@ var RecordList = React.createClass({
     });
     return(
       <div className="record-list">
-        { RecordNodes }
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Title</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            { RecordNodes }
+          </tbody>
+        </table>
       </div>
     );
   }
