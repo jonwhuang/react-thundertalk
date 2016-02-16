@@ -3,15 +3,9 @@ var Records = React.createClass({
   getInitialState: function(){
     return {records: this.props.records};
   },
-  delr: function(recordId) {
+  delr: function(record) {
     var records = this.state.records.slice();
-    var recordToDelete;
-    records.forEach(function(record){
-      if (record.id === recordId) {
-        recordToDelete = record;
-      }
-    })
-    index = records.indexOf(recordToDelete);
+    index = records.indexOf(record);
     records.splice(index, 1);
     this.replaceState({records: records})
   },
@@ -80,8 +74,8 @@ var Records = React.createClass({
 });
 
 var RecordList = React.createClass({
-  deleteRecord: function(recordId){
-    return this.props.del(recordId);
+  deleteRecord: function(record){
+    return this.props.del(record);
   },
   render: function(){
     var RecordNodes = this.props.records.map(function(record) {

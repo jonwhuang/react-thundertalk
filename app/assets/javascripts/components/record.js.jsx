@@ -7,7 +7,7 @@ var Record = React.createClass({
       url: '/records/' + recordId,
       dataType: 'json',
       success: function(){
-        this.props.handleDeleteRecord(this.props.record.id);
+        this.props.handleDeleteRecord(this.props.record);
       }.bind(this),
     });
   },
