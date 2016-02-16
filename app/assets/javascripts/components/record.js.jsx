@@ -1,15 +1,15 @@
 var Record = React.createClass({
   handleDelete: function(e){
     e.preventDefault();
-    return this.props.handleDeleteRecord(this.props.record.id);
-    // $.ajax({
-    //   method: 'DELETE',
-    //   url: "/records/8",
-    //   dataType: 'json',
-    //   success: function(){
-    //     this.props.handleDeleteRecord(this.props.record);
-    //   }.bind(this)
-    // });
+    recordId = this.props.record.id
+    $.ajax({
+      method: 'DELETE',
+      url: '/records/' + recordId,
+      dataType: 'json',
+      success: function(){
+        this.props.handleDeleteRecord(this.props.record.id);
+      }.bind(this),
+    });
   },
   render: function(){
     return(

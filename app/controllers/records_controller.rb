@@ -17,8 +17,7 @@ class RecordsController < ApplicationController
   def destroy
     @record = Record.find(params[:id])
     @record.destroy
-    @records = Record.all
-    render json: @records
+    head :no_content
   end
 
   private

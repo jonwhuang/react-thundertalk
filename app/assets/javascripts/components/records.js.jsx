@@ -1,36 +1,19 @@
 
 var Records = React.createClass({
-  // loadRecordsFromServer: function(){
-  //   $.ajax({
-  //     url: this.props.url,
-  //     dataType: 'json',
-  //     cache: false,
-  //     success: function(records) {
-  //       this.setState({data: records});
-  //     }.bind(this),
-  //     error: function(xhr, status, error) {
-  //       console.error(this.props.url, status, error.toString());
-  //     }.bind(this)
-  //   });
-  // },
   getInitialState: function(){
     return {records: this.props.records};
   },
-  // getDefaultProps: function(){
-  //   return {records: []}
-  // },
   delr: function(recordId) {
-    $.ajax({
-      method: 'DELETE',
-      url: '/records/' + recordId,
-      dataType: 'json',
-      success: function(records){
-        this.replaceState({records: records});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
+    var records = this.state.records.slice();
+    var recordToDelete;
+    records.forEach(function(record){
+      if (record.id === recordId) {
+        recordToDelete = record;
+      }
+    })
+    index = records.indexOf(recordToDelete);
+    records.splice(index, 1);
+    this.replaceState({records: records})
   },
   handleRecordSubmit: function(record) {
     var records = this.state.records.slice();
@@ -51,10 +34,6 @@ var Records = React.createClass({
     });
 
   },
-  // componentWillUpdate: function(){
-  //   console.log("hi");
-  //   this.loadRecordsFromServer();
-  // },
   credits: function(){
     var credits;
     credits = this.state.records.filter(function(record){
