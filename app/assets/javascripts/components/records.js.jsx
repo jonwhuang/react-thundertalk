@@ -5,8 +5,8 @@ var Records = React.createClass({
   //     url: this.props.url,
   //     dataType: 'json',
   //     cache: false,
-  //     success: function(data) {
-  //       this.setState({records: data});
+  //     success: function(records) {
+  //       this.setState({data: records});
   //     }.bind(this),
   //     error: function(xhr, status, error) {
   //       console.error(this.props.url, status, error.toString());
@@ -14,42 +14,46 @@ var Records = React.createClass({
   //   });
   // },
   getInitialState: function(){
-    return {records: JSON.parse(this.props.records)};
+    return {records: this.props.records};
   },
   // getDefaultProps: function(){
   //   return {records: []}
   // },
-  // addRecord: function(record){
-  //   var records = this.state.records.slice();
-  //   records.push(record);
-  //   this.setState({records: records});
-  // },
+  delr: function(recordId) {
+    $.ajax({
+      method: 'DELETE',
+      url: '/records/' + recordId,
+      dataType: 'json',
+      success: function(records){
+        this.replaceState({records: records});
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
   handleRecordSubmit: function(record) {
     var records = this.state.records.slice();
     record.id = Date.now();
-    records.push(record);
-    this.setState({records: records}, function(){
-      $.ajax({
-        data: {record: record},
-        url: this.props.url,
-        type: "POST",
-        dataType: 'json',
-        success: function(data){
-          this.setState(data);
-        }.bind(this),
-        error: function(xhr, status, err) {
-          console.log(this.props.url, status, err.toString());
-        }.bind(this)
-      });
-    })
+    $.ajax({
+      data: {record: record},
+      url: this.props.url,
+      type: "POST",
+      dataType: 'json',
+      success: function(data){
+        record.id = data.id;
+        records.push(record);
+        this.setState({records: records})
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.log(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+
   },
-  // componentDidMount: function(){
+  // componentWillUpdate: function(){
+  //   console.log("hi");
   //   this.loadRecordsFromServer();
-  //   this.loadInterval = setInterval(this.loadRecordsFromServer, this.props.updateInterval);
-  // },
-  // componentWillUnmount: function() {
-  //   this.loadInterval && clearInterval(this.loadInterval);
-  //   this.loadInterval = false;
   // },
   credits: function(){
     var credits;
@@ -87,7 +91,7 @@ var Records = React.createClass({
               <AmountBox type="panel panel-danger" amount={this.debits()} text="Debit" />
               <AmountBox type="panel panel-info" amount={this.balance()} text="Balance" />
             </div>
-            <RecordList records={ this.state.records } />
+            <RecordList del={this.delr} records={ this.state.records } />
             <RecordForm form={ this.state.form } onRecordSubmit={ this.handleRecordSubmit } />
           </div>
         </div>
@@ -97,12 +101,15 @@ var Records = React.createClass({
 });
 
 var RecordList = React.createClass({
+  deleteRecord: function(recordId){
+    return this.props.del(recordId);
+  },
   render: function(){
     var RecordNodes = this.props.records.map(function(record) {
       return(
-        <Record date={record.date} title={record.title} amount={record.amount} key={record.id}></Record>
+        <Record record={record} date={record.date} title={record.title} amount={record.amount} key={record.id} handleDeleteRecord={ this.deleteRecord } ></Record>
       )
-    });
+    }.bind(this));
     return(
       <div className="record-list">
         <table className="table table-bordered">
@@ -111,6 +118,7 @@ var RecordList = React.createClass({
               <th>Date</th>
               <th>Title</th>
               <th>Amount</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>

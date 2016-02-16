@@ -14,6 +14,13 @@ class RecordsController < ApplicationController
     end
   end
 
+  def destroy
+    @record = Record.find(params[:id])
+    @record.destroy
+    @records = Record.all
+    render json: @records
+  end
+
   private
 
     def record_params
