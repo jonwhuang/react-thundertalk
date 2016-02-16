@@ -78,15 +78,19 @@ var Records = React.createClass({
   },
   render: function(){
     return (
-      <div className="record-box">
-        <h2 className="title"> Records </h2>
-        <div className = "row">
-          <AmountBox type="panel panel-success" amount={this.credits()} text="Credit" />
-          <AmountBox type="panel panel-danger" amount={this.debits()} text="Debit" />
-          <AmountBox type="panel panel-info" amount={this.balance()} text="Balance" />
+      <div className="container">
+        <div className="col-md-8">
+          <div className="record-box">
+            <h2 className="title"> Records </h2>
+            <div className = "row">
+              <AmountBox type="panel panel-success" amount={this.credits()} text="Credit" />
+              <AmountBox type="panel panel-danger" amount={this.debits()} text="Debit" />
+              <AmountBox type="panel panel-info" amount={this.balance()} text="Balance" />
+            </div>
+            <RecordList records={ this.state.records } />
+            <RecordForm form={ this.state.form } onRecordSubmit={ this.handleRecordSubmit } />
+          </div>
         </div>
-        <RecordList records={ this.state.records } />
-        <RecordForm form={ this.state.form } onRecordSubmit={ this.handleRecordSubmit } />
       </div>
     );
   }
