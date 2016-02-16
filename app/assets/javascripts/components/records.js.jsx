@@ -51,10 +51,40 @@ var Records = React.createClass({
   //   this.loadInterval && clearInterval(this.loadInterval);
   //   this.loadInterval = false;
   // },
+  credits: function(){
+    var credits;
+    credits = this.state.records.filter(function(record){
+      return record.amount >= 0;
+    });
+    return(
+      credits.reduce((function(sum, record){
+        return sum + parseFloat(record.amount)
+      }), 0)
+    );
+  },
+  debits: function(){
+    var debits;
+    debits = this.state.records.filter(function(record){
+      return record.amount < 0;
+    });
+    return(
+      debits.reduce((function(sum, record){
+        return sum + parseFloat(record.amount)
+      }), 0)
+    );
+  },
+  balance: function(){
+    return (this.credits() + this.debits());
+  },
   render: function(){
     return (
       <div className="record-box">
         <h2 className="title"> Records </h2>
+        <div className = "row">
+          <AmountBox type="panel panel-success" amount={this.credits()} text="Credit" />
+          <AmountBox type="panel panel-danger" amount={this.debits()} text="Debit" />
+          <AmountBox type="panel panel-info" amount={this.balance()} text="Balance" />
+        </div>
         <RecordList records={ this.state.records } />
         <RecordForm form={ this.state.form } onRecordSubmit={ this.handleRecordSubmit } />
       </div>
