@@ -3,7 +3,7 @@ var Records = React.createClass({
   getInitialState: function(){
     return {records: this.props.records};
   },
-  delr: function(record) {
+  removeRecord: function(record) {
     var records = this.state.records.slice();
     index = records.indexOf(record);
     records.splice(index, 1);
@@ -11,7 +11,6 @@ var Records = React.createClass({
   },
   handleRecordSubmit: function(record) {
     var records = this.state.records.slice();
-    record.id = Date.now();
     $.ajax({
       data: {record: record},
       url: this.props.url,
@@ -64,7 +63,7 @@ var Records = React.createClass({
               <AmountBox type="panel panel-danger" amount={this.debits()} text="Debit" />
               <AmountBox type="panel panel-info" amount={this.balance()} text="Balance" />
             </div>
-            <RecordList del={this.delr} records={ this.state.records } />
+            <RecordList del={this.removeRecord} records={ this.state.records } />
             <RecordForm form={ this.state.form } onRecordSubmit={ this.handleRecordSubmit } />
           </div>
         </div>

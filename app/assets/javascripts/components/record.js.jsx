@@ -1,7 +1,7 @@
 var Record = React.createClass({
   handleDelete: function(e){
     e.preventDefault();
-    recordId = this.props.record.id
+    var recordId = this.props.record.id
     $.ajax({
       method: 'DELETE',
       url: '/records/' + recordId,
